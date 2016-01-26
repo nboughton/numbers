@@ -43,7 +43,41 @@ func Fibonacci() chan *big.Int {
 	return c
 }
 
-// OddNumbers returns a continuous channel of odd numbers
+// Numbers returns a continuous channel of integers from 1
+func Numbers() chan int64 {
+	c := make(chan int64)
+	i := int64(1)
+
+	go func() {
+		c <- i
+		for true {
+			i++
+			c <- i
+		}
+		close(c)
+	}()
+
+	return c
+}
+
+// EvenNumbers returns a continuous channel of even numbers from 2
+func EvenNumbers() chan int64 {
+	c := make(chan int64)
+	i := int64(2)
+
+	go func() {
+		c <- i
+		for true {
+			i += 2
+			c <- i
+		}
+		close(c)
+	}()
+
+	return c
+}
+
+// OddNumbers returns a continuous channel of odd numbers from 1
 func OddNumbers() chan int64 {
 	c := make(chan int64)
 	i := int64(1)
