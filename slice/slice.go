@@ -13,7 +13,7 @@ func SliceToInt(n []int64) int64 {
 	s := ""
 
 	for _, v := range n {
-		s = s + strconv.FormatInt(v, 64)
+		s = s + strconv.FormatInt(v, 10)
 	}
 
 	i, _ := strconv.Atoi(s)
@@ -22,7 +22,7 @@ func SliceToInt(n []int64) int64 {
 
 // IntToSlice returns a number as a slice of its digits
 func IntToSlice(n int64) []int64 {
-	nStrs := strings.Split(strconv.FormatInt(n, 64), "")
+	nStrs := strings.Split(strconv.FormatInt(n, 10), "")
 	nInts := []int64{}
 
 	for _, v := range nStrs {
