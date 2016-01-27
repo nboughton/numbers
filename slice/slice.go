@@ -4,7 +4,6 @@ Package slice - functions for converting numbers to and from slices
 package slice
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -14,7 +13,7 @@ func SliceToInt(n []int64) int64 {
 	s := ""
 
 	for _, v := range n {
-		s = s + fmt.Sprintf("%v", v)
+		s = s + strconv.FormatInt(v, 64)
 	}
 
 	i, _ := strconv.Atoi(s)
@@ -23,7 +22,7 @@ func SliceToInt(n []int64) int64 {
 
 // IntToSlice returns a number as a slice of its digits
 func IntToSlice(n int64) []int64 {
-	nStrs := strings.Split(fmt.Sprintf("%v", n), "")
+	nStrs := strings.Split(strconv.FormatInt(n, 64), "")
 	nInts := []int64{}
 
 	for _, v := range nStrs {
