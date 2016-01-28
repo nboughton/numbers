@@ -15,11 +15,13 @@ func Primes() chan int64 {
 
 	go func() {
 		p <- 2
+
 		for i := int64(3); true; i += 2 {
 			if check.Prime(i) {
 				p <- i
 			}
 		}
+
 		close(p)
 	}()
 
@@ -32,6 +34,7 @@ func Fibonacci() chan *big.Int {
 
 	go func() {
 		a, b := big.NewInt(0), big.NewInt(1)
+
 		for true {
 			a.Add(a, b)
 			a, b = b, a
@@ -40,17 +43,18 @@ func Fibonacci() chan *big.Int {
 
 		close(c)
 	}()
+
 	return c
 }
 
 // BigInts returns a continuous stream of big Ints integers from 1
 func BigInts() chan *big.Int {
 	c := make(chan *big.Int)
-
 	i := big.NewInt(1)
 
 	go func() {
 		c <- i
+
 		for true {
 			i.Add(i, big.NewInt(1))
 			c <- i
@@ -69,10 +73,12 @@ func Ints() chan int64 {
 
 	go func() {
 		c <- i
+
 		for true {
 			i++
 			c <- i
 		}
+
 		close(c)
 	}()
 
@@ -86,10 +92,12 @@ func Evens() chan int64 {
 
 	go func() {
 		c <- i
+
 		for true {
 			i += 2
 			c <- i
 		}
+
 		close(c)
 	}()
 
@@ -103,17 +111,20 @@ func Odds() chan int64 {
 
 	go func() {
 		c <- i
+
 		for true {
 			i += 2
 			c <- i
 		}
+
 		close(c)
 	}()
 
 	return c
 }
 
-// Rotations returns a sequence of rotations of n
+// Rotations returns a sequence of rotations of n.
+// I.e Rotations(123) = 123 -> 312 -> 231
 func Rotations(n int64) chan []int64 {
 	rts := make(chan []int64)
 
@@ -139,7 +150,8 @@ func Rotations(n int64) chan []int64 {
 }
 
 // Truncate returns a channel of int64 slices that contain the
-// truncation sequence of n from the left and the right simultaneously
+// truncation sequence of n from the left and the right simultaneously.
+// I.e Truncate(123) = [123, 123] -> [23, 12] -> [3, 1]
 func Truncate(n int64) chan []int64 {
 	c := make(chan []int64)
 
