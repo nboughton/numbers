@@ -1,6 +1,6 @@
 /*
 Package check - provides boolean tests to see if numbers meet criteria
-such as primacy...
+such as primes, palindromes etc...
 */
 package check
 
