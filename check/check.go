@@ -40,11 +40,10 @@ func Palindrome(b []byte) bool {
 	left, right := []byte{}, []byte{}
 	if len(b)%2 == 0 {
 		left = b[:len(b)/2]
-		right = b[len(b)/2:]
 	} else {
 		left = b[:len(b)/2+1]
-		right = b[len(b)/2:]
 	}
+	right = b[len(b)/2:]
 
 	test := []byte{}
 	for i := len(right) - 1; i >= 0; i-- {
