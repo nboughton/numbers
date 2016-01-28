@@ -45,13 +45,10 @@ func Palindrome(b []byte) bool {
 	}
 	right = b[len(b)/2:]
 
-	test := []byte{}
+	reverseRight := []byte{}
 	for i := len(right) - 1; i >= 0; i-- {
-		test = append(test, right[i])
+		reverseRight = append(reverseRight, right[i])
 	}
 
-	if reflect.DeepEqual(left, test) {
-		return true
-	}
-	return false
+	return reflect.DeepEqual(left, reverseRight)
 }
