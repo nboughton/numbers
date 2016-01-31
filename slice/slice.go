@@ -4,9 +4,22 @@ Package slice - functions for converting numbers to and from slices
 package slice
 
 import (
+	"math/big"
 	"strconv"
 	"strings"
 )
+
+// SliceToBigInt returns a big Int composite of the digits in n
+func SliceToBigInt(n []int) *big.Int {
+	s := ""
+
+	for _, v := range n {
+		s += strconv.Itoa(v)
+	}
+
+	i, _ := big.NewInt(0).SetString(s, 10)
+	return i
+}
 
 // SliceToInt64 takes a slice of int64s and returns their composite int64
 func SliceToInt64(n []int64) int64 {
