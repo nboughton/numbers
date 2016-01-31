@@ -129,7 +129,7 @@ func Rotations(n int64) chan []int64 {
 	rts := make(chan []int64)
 
 	go func() {
-		a, b, c := slice.IntToSlice(n), []int64{}, []int64{}
+		a, b, c := slice.Int64ToSlice(n), []int64{}, []int64{}
 		rts <- a
 
 		for i := 1; i < len(a); i++ {
@@ -156,10 +156,10 @@ func Truncate(n int64) chan []int64 {
 	c := make(chan []int64)
 
 	go func() {
-		d := slice.IntToSlice(n)
+		d := slice.Int64ToSlice(n)
 
 		for i := range d {
-			c <- []int64{slice.SliceToInt(d[i:]), slice.SliceToInt(d[:len(d)-i])}
+			c <- []int64{slice.SliceToInt64(d[i:]), slice.SliceToInt64(d[:len(d)-i])}
 		}
 
 		close(c)
