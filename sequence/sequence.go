@@ -123,6 +123,22 @@ func Odds() chan int64 {
 	return c
 }
 
+// Triangles returns a channel of the triangle number sequence
+func Triangles() chan int64 {
+	c := make(chan int64)
+	i := int64(1)
+
+	go func() {
+		for true {
+			c <- i * (i + 1) / 2
+			i++
+		}
+		close(c)
+	}()
+
+	return c
+}
+
 // Rotations returns a sequence of rotations of n.
 // I.e Rotations(123) = 123 -> 312 -> 231
 func Rotations(n int64) chan []int64 {

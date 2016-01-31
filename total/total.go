@@ -13,6 +13,7 @@ var abc = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var atoi = make(map[byte]int)
 
 func init() {
+	// populate atoi map for Abc func
 	for i, v := range abc {
 		atoi[v] = i + 1
 	}
