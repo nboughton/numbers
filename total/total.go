@@ -6,7 +6,29 @@ package total
 import (
 	//"math"
 	"math/big"
+	"strings"
 )
+
+var abc = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var atoi = make(map[byte]int)
+
+func init() {
+	for i, v := range abc {
+		atoi[v] = i + 1
+	}
+}
+
+// Abc returns the a = 1, b = 2 etc score for string s
+func Abc(s string) int64 {
+	s = strings.ToUpper(s)
+
+	score := 0
+	for _, v := range []byte(s) {
+		score += atoi[v]
+	}
+
+	return int64(score)
+}
 
 // Sum returns sum of terms n
 func Sum(n []int64) int64 {
