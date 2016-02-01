@@ -33,7 +33,7 @@ func SliceToInt64(n []int64) int64 {
 	return int64(i)
 }
 
-// SliceToInt64 takes a slice of ints and returns their composite int
+// SliceToInt takes a slice of ints and returns their composite int
 func SliceToInt(n []int) int {
 	s := ""
 

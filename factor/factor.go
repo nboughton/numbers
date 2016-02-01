@@ -15,6 +15,10 @@ import (
 // Primes returns int64 slice of prime factors of n
 func Primes(n int64) []int64 {
 	p := []int64{}
+	if n%2 == 0 {
+		p = append(p, int64(2))
+	}
+
 	for i := int64(3); float64(i) < math.Ceil(math.Sqrt(float64(n))); i += 2 {
 		if n%i == 0 && check.Prime(i) {
 			p = append(p, i)
