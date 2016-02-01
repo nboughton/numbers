@@ -23,9 +23,27 @@ func PyTriplet(a, b, c int64) bool {
 	return false
 }
 
+// Triangular returns true is n is a triangular number
+func Triangular(n int64) bool {
+	i, f := math.Modf((math.Sqrt(float64(8*n+1)) - 1) / 2)
+	if f == 0 && i > 1 {
+		return true
+	}
+	return false
+}
+
+// Hexagonal returns true if n is a hexagonal number
+func Hexagonal(n int64) bool {
+	i, f := math.Modf((math.Sqrt(float64(8*n+1)) + 1) / 4)
+	if f == 0 && i > 1 {
+		return true
+	}
+	return false
+}
+
 // Pentagonal returns true if n is a pentagonal number
 func Pentagonal(n int64) bool {
-	i, f := math.Modf(math.Sqrt(float64(24*n+1)) + 1/6)
+	i, f := math.Modf((math.Sqrt(float64(24*n+1)) + 1) / 6)
 	if f == 0 && i > 0 {
 		return true
 	}

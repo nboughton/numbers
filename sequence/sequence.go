@@ -139,6 +139,23 @@ func Triangles() chan int64 {
 	return c
 }
 
+// Hexagonals returns a channel of the hexagonal number sequence
+func Hexagonals() chan int64 {
+	c := make(chan int64)
+	i := int64(1)
+
+	go func() {
+		for true {
+			c <- i * (2*i - 1)
+			i++
+		}
+		close(c)
+	}()
+
+	return c
+}
+
+// Pentagonals returns a channel of the pentagonal number sequence
 func Pentagonals() chan int64 {
 	c := make(chan int64)
 	i := int64(1)
