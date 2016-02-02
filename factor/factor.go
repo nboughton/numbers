@@ -16,14 +16,10 @@ import (
 // Primes returns int64 slice of prime factors of n
 func Primes(n int64) []int64 {
 	p1 := []int64{}
-	t := int64(math.Sqrt(float64(n)))
+	t := int64(math.Ceil(math.Sqrt(float64(n)))) * 2
 
 	if n%2 == 0 {
 		p1 = append(p1, int64(2))
-	}
-
-	if n < 1000 {
-		t = n/2 + 1
 	}
 
 	for i := int64(3); i <= t; i += 2 {
