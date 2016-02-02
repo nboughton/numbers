@@ -15,9 +15,9 @@ import (
 
 // Primes returns int64 slice of prime factors of n
 func Primes(n int64) []int64 {
-	f, p := Divisors(n), []int64{}
+	p := []int64{}
 
-	for _, v := range f {
+	for _, v := range Divisors(n) {
 		if check.Prime(v) {
 			p = append(p, v)
 		}
