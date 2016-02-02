@@ -4,24 +4,33 @@ Package factor - provides functions for return factors, divisors and factorials
 package factor
 
 import (
+	"github.com/cznic/sortutil"
 	"github.com/nboughton/numbers/check"
 	"github.com/nboughton/numbers/total"
 	"math"
 	"math/big"
-	"sort"
 	"strconv"
 )
 
 // Primes returns int64 slice of prime factors of n
 func Primes(n int64) []int64 {
 	p := []int64{}
+	t := int64(math.Sqrt(float64(n)))
+
 	if n%2 == 0 {
 		p = append(p, int64(2))
 	}
 
-	for i := int64(3); float64(i) < math.Ceil(math.Sqrt(float64(n))); i += 2 {
+	if n < 100 {
+		t = n/2 + 1
+	}
+
+	for i := int64(3); i < t; i += 2 {
 		if n%i == 0 && check.Prime(i) {
 			p = append(p, i)
+			if i*i != n && check.Prime(i*i) {
+				p = append(p, i*i)
+			}
 		}
 	}
 	return p
@@ -29,30 +38,22 @@ func Primes(n int64) []int64 {
 
 // Divisors returns int64 slice of divisors of n
 func Divisors(n int64) []int64 {
-	f := []int64{}
-	lf := []int{}
-	for i := int64(1); float64(i) <= math.Ceil(math.Sqrt(float64(n))); i++ {
+	f1, f2 := []int64{}, []int64{}
+	t := int64(math.Sqrt(float64(n)))
+
+	for i := int64(1); i <= t; i++ {
 		if n%i == 0 {
-			f = append(f, i)
+			f1 = append(f1, i)
 			if i*i != n {
-				lf = append(lf, int(n/i))
+				f2 = append(f2, n/i)
 			}
 		}
 	}
-	sort.Ints(lf)
-	for _, v := range lf {
-		dup := false
-		for _, r := range f {
-			if int64(v) == r {
-				dup = true
-				break
-			}
-		}
-		if !dup {
-			f = append(f, int64(v))
-		}
-	}
-	return f
+
+	f1 = append(f1, f2...)
+	sortutil.Int64Slice(f1).Sort()
+	sortutil.Dedupe(sortutil.Int64Slice(f1))
+	return f1
 }
 
 // Factorial returns n! using big Ints
