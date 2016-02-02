@@ -15,37 +15,31 @@ import (
 
 // Primes returns int64 slice of prime factors of n
 func Primes(n int64) []int64 {
-	p1 := []int64{}
-	t := int64(math.Ceil(math.Sqrt(float64(n)))) * 2
+	f, p := Divisors(n), []int64{}
 
-	if n%2 == 0 {
-		p1 = append(p1, int64(2))
-	}
-
-	for i := int64(3); i <= t; i += 2 {
-		if n%i == 0 && check.Prime(i) {
-			p1 = append(p1, i)
+	for _, v := range f {
+		if check.Prime(v) {
+			p = append(p, v)
 		}
 	}
 
-	return p1
+	return p
 }
 
 // Divisors returns int64 slice of divisors of n
 func Divisors(n int64) []int64 {
-	f1, f2 := []int64{}, []int64{}
+	f1 := []int64{}
 	t := int64(math.Sqrt(float64(n)))
 
 	for i := int64(1); i <= t; i++ {
 		if n%i == 0 {
 			f1 = append(f1, i)
 			if i*i != n {
-				f2 = append(f2, n/i)
+				f1 = append(f1, n/i)
 			}
 		}
 	}
 
-	f1 = append(f1, f2...)
 	sortutil.Int64Slice(f1).Sort()
 	sortutil.Dedupe(sortutil.Int64Slice(f1))
 	return f1
