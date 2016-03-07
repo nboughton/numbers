@@ -3,7 +3,7 @@ A set of small mathematical utility packages developed whilst working through Pr
 
 Documentation:
 
-<a href="https://godoc.org/github.com/nboughton/numbers/isit">Package check</a> - boolean tests to see if numbers meet criteria such as primacy, palindromes etc
+<a href="https://godoc.org/github.com/nboughton/numbers/isit">Package isit</a> - boolean tests to see if numbers meet criteria such as primacy, palindromes etc
 
 <a href="https://godoc.org/github.com/nboughton/numbers/factor">Package factor</a> - functions for returning factors, divisors and factorials
 
