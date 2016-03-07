@@ -6,7 +6,7 @@ package factor
 import (
 	//"fmt"
 	"github.com/cznic/sortutil"
-	"github.com/nboughton/numbers/check"
+	"github.com/nboughton/numbers/isit"
 	"github.com/nboughton/numbers/total"
 	"math"
 	"math/big"
@@ -18,7 +18,7 @@ func Primes(n int64) []int64 {
 	p := []int64{}
 
 	for _, v := range Divisors(n) {
-		if check.Prime(v) {
+		if isit.Prime(v) {
 			p = append(p, v)
 		}
 	}

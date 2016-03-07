@@ -4,7 +4,7 @@ Package sequence - functions for returning channels of sequences
 package sequence
 
 import (
-	"github.com/nboughton/numbers/check"
+	"github.com/nboughton/numbers/isit"
 	"github.com/nboughton/numbers/slice"
 	"math/big"
 )
@@ -17,7 +17,7 @@ func Primes() chan int64 {
 		p <- 2
 
 		for i := int64(3); true; i += 2 {
-			if check.Prime(i) {
+			if isit.Prime(i) {
 				p <- i
 			}
 		}

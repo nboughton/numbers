@@ -1,5 +1,5 @@
 /*
-Package grid - functions for getting grid vectors, checking vector paths and creating interesting grids
+Package grid - functions for getting grid vectors, isiting vector paths and creating interesting grids
 */
 package grid
 
