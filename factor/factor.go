@@ -28,21 +28,20 @@ func Primes(n int64) []int64 {
 
 // Divisors returns int64 slice of divisors of n
 func Divisors(n int64) []int64 {
-	f1 := []int64{}
-	t := int64(math.Sqrt(float64(n)))
+	f, t := []int64{}, int64(math.Sqrt(float64(n)))
 
 	for i := int64(1); i <= t; i++ {
 		if n%i == 0 {
-			f1 = append(f1, i)
+			f = append(f, i)
 			if i*i != n {
-				f1 = append(f1, n/i)
+				f = append(f, n/i)
 			}
 		}
 	}
 
-	sortutil.Int64Slice(f1).Sort()
-	sortutil.Dedupe(sortutil.Int64Slice(f1))
-	return f1
+	sortutil.Int64Slice(f).Sort()
+	sortutil.Dedupe(sortutil.Int64Slice(f))
+	return f
 }
 
 // Factorial returns n! using big Ints

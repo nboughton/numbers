@@ -46,8 +46,7 @@ func SliceToInt(n []int) int {
 
 // Int64ToSlice returns a number as a slice of its digits
 func Int64ToSlice(n int64) []int64 {
-	nStrs := []byte((strconv.FormatInt(n, 10)))
-	nInts := []int64{}
+	nStrs, nInts := []byte((strconv.FormatInt(n, 10))), []int64{}
 
 	for _, v := range nStrs {
 		i, _ := strconv.Atoi(string(v))
@@ -59,8 +58,7 @@ func Int64ToSlice(n int64) []int64 {
 
 // IntToSlice returns a number as a slice of its digits
 func IntToSlice(n int) []int {
-	nStrs := []byte((strconv.Itoa(n)))
-	nInts := []int{}
+	nStrs, nInts := []byte((strconv.Itoa(n))), []int{}
 
 	for _, v := range nStrs {
 		i, _ := strconv.Atoi(string(v))
