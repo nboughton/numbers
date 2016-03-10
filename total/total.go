@@ -4,8 +4,6 @@ Package total - Provides functions for sums, products, powers etc
 package total
 
 import (
-	//"math"
-	"github.com/nboughton/numbers/factor"
 	"math/big"
 	"strings"
 )
@@ -87,13 +85,4 @@ func BigPow(x, y int64) *big.Int {
 		n.Mul(n, m)
 	}
 	return n
-}
-
-// CombinatoricSelections returns the number of possible selections of r from n
-func CombinatoricSelections(n, r int) *big.Int {
-	nf := factor.Factorial(int64(n))
-	rf := factor.Factorial(int64(r))
-	nmrf := factor.Factorial(int64(n - r))
-
-	return big.NewInt(0).Div(nf, rf.Mul(rf, nmrf))
 }
