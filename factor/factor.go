@@ -56,3 +56,16 @@ func Factorial(n int64) *big.Int {
 	}
 	return total.BigProduct(set)
 }
+
+// Totient returns the result of Eulers Totient or Phi function of value n
+func Totient(n int64) int64 {
+	pF := Primes(n)
+
+	ans := n
+
+	for _, prime := range pF {
+		ans = ans * (prime - 1) / prime
+	}
+
+	return ans
+}
