@@ -173,12 +173,12 @@ func Pentagonals() chan int64 {
 
 // Rotations returns a sequence of rotations of n.
 // I.e Rotations(123) = 123 -> 312 -> 231
-func Rotations(n int64) chan []int64 {
-	rts := make(chan []int64)
+func Rotations(n int64) chan int64 {
+	rts := make(chan int64)
 
 	go func() {
 		a, b, c := slice.Int64ToSlice(n), []int64{}, []int64{}
-		rts <- a
+		rts <- n
 
 		for i := 1; i < len(a); i++ {
 			if len(a) > 2 {
@@ -188,7 +188,7 @@ func Rotations(n int64) chan []int64 {
 			}
 
 			a = append(b, c...)
-			rts <- a
+			rts <- slice.SliceToInt64(a)
 		}
 
 		close(rts)
