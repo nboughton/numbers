@@ -5,7 +5,7 @@ package sequence
 
 import (
 	"github.com/nboughton/numbers/isit"
-	"github.com/nboughton/numbers/slice"
+	//"github.com/nboughton/numbers/slice"
 	"math/big"
 )
 
@@ -178,6 +178,7 @@ func Rotations(n int64) chan int64 {
 
 	go func() {
 		s := []byte(big.NewInt(n).String())
+
 		for i := 0; i < len(s); i++ {
 			t := []byte{s[len(s)-1]}
 			t = append(t, s[:len(s)-1]...)
@@ -199,10 +200,12 @@ func Truncate(n int64) chan []int64 {
 	c := make(chan []int64)
 
 	go func() {
-		d := slice.Int64ToSlice(n)
+		d := []byte(big.NewInt(n).String())
 
 		for i := range d {
-			c <- []int64{slice.SliceToInt64(d[i:]), slice.SliceToInt64(d[:len(d)-i])}
+			l, _ := big.NewInt(0).SetString(string(d[i:]), 10)
+			r, _ := big.NewInt(0).SetString(string(d[:len(d)-i]), 10)
+			c <- []int64{l.Int64(), r.Int64()}
 		}
 
 		close(c)
