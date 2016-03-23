@@ -177,18 +177,13 @@ func Rotations(n int64) chan int64 {
 	rts := make(chan int64)
 
 	go func() {
-		a, b, c := slice.Int64ToSlice(n), []int64{}, []int64{}
-		rts <- n
-
-		for i := 1; i < len(a); i++ {
-			if len(a) > 2 {
-				b, c = a[len(a)-1:], a[:len(a)-1]
-			} else if len(a) == 2 {
-				b, c = a[1:], a[:1]
-			}
-
-			a = append(b, c...)
-			rts <- slice.SliceToInt64(a)
+		s := []byte(big.NewInt(n).String())
+		for i := 0; i < len(s); i++ {
+			t := []byte{s[len(s)-1]}
+			t = append(t, s[:len(s)-1]...)
+			m, _ := big.NewInt(0).SetString(string(t), 10)
+			rts <- m.Int64()
+			s = t
 		}
 
 		close(rts)
