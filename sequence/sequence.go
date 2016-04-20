@@ -125,12 +125,10 @@ func Odds() chan int64 {
 // Triangles returns a channel of the triangle number sequence
 func Triangles() chan int64 {
 	c := make(chan int64)
-	i := int64(1)
 
 	go func() {
-		for true {
+		for i := int64(0); true; i++ {
 			c <- i * (i + 1) / 2
-			i++
 		}
 		close(c)
 	}()
