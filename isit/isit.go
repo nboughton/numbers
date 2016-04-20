@@ -12,7 +12,7 @@ import (
 
 // Prime returns true if n is prime
 func Prime(n int64) bool {
-	return big.NewInt(n).ProbablyPrime(2)
+	return big.NewInt(n).ProbablyPrime(5)
 }
 
 // PyTriplet returns true if a < b < c and a^2 + b^2 = c^2
