@@ -212,3 +212,134 @@ func Truncate(n int64) chan []int64 {
 
 	return c
 }
+
+/* The functions below are channel/int64 adaptations of the Permutations and
+Combinations functions found in github.com/ntns/goitertools/itertools */
+
+// Permutations returns sucessive r length permutations of elements from
+// iterable.
+//
+// Elements are treated as unique based on their position,
+// not on their value. So if the input elements are unique, there
+// will be no repeat values in each permutation.
+//
+//  Permutations([]int64{1, 2, 3}, 3) -> [[1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]]
+func Permutations(iterable []int64, r int64) chan []int64 {
+	ch := make(chan []int64)
+	if r > int64(len(iterable)) || r == 0 {
+		close(ch)
+		return ch
+	}
+
+	go func() {
+		pool := iterable
+		n := int64(len(pool))
+
+		indices := make([]int64, n)
+		for i := range indices {
+			indices[i] = int64(i)
+		}
+
+		cycles := make([]int64, r)
+		for i := range cycles {
+			cycles[i] = n - int64(i)
+		}
+
+		result := make([]int64, r)
+		for i, el := range indices[:r] {
+			result[i] = pool[el]
+		}
+		ch <- result
+
+		for n > 0 {
+			i := r - 1
+			for ; i >= 0; i-- {
+				cycles[i]--
+				if cycles[i] == 0 {
+					index := indices[i]
+					for j := i; j < n-1; j++ {
+						indices[j] = indices[j+1]
+					}
+					indices[n-1] = index
+					cycles[i] = n - i
+				} else {
+					j := cycles[i]
+					indices[i], indices[n-j] = indices[n-j], indices[i]
+
+					result := make([]int64, r)
+					for k := int64(0); k < r; k++ {
+						result[k] = pool[indices[k]]
+					}
+
+					ch <- result
+					break
+				}
+			}
+			if i < 0 {
+				break
+			}
+		}
+		close(ch)
+	}()
+
+	return ch
+}
+
+// Combinations returns r length subsquences of elements from
+// iterable.
+//
+// Elements are treated as unique based on their position,
+// not on their value. So if the input elements are unique, there
+// will be no repeat values in each combination.
+//  Combinations([]int64{1, 2, 3, 4, 5}, 4) -> [[1 2 3 4] [1 2 3 5] [1 2 4 5] [1 3 4 5] [2 3 4 5]]
+func Combinations(iterable []int64, r int64) chan []int64 {
+	ch := make(chan []int64)
+	if r > int64(len(iterable)) || r == 0 {
+		close(ch)
+		return ch
+	}
+
+	go func() {
+		pool := iterable
+		n := int64(len(pool))
+
+		indices := make([]int64, r)
+		for i := range indices {
+			indices[i] = int64(i)
+		}
+
+		result := make([]int64, r)
+		for i, el := range indices {
+			result[i] = pool[el]
+		}
+
+		ch <- result
+
+		for {
+			i := r - 1
+			for i >= 0 && indices[i] == i+n-r {
+				i--
+			}
+
+			if i < 0 {
+				break
+			}
+
+			indices[i]++
+			for j := i + 1; j < r; j++ {
+				indices[j] = indices[j-1] + 1
+			}
+
+			result := make([]int64, r)
+			for i = 0; i < int64(len(indices)); i++ {
+				result[i] = pool[indices[i]]
+			}
+
+			ch <- result
+		}
+
+		close(ch)
+	}()
+
+	return ch
+}
