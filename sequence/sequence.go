@@ -5,7 +5,6 @@ package sequence
 
 import (
 	"github.com/nboughton/numbers/isit"
-	//"github.com/nboughton/numbers/slice"
 	"math/big"
 )
 
