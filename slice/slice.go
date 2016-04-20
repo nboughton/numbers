@@ -8,20 +8,20 @@ import (
 	"strconv"
 )
 
-// SliceToBigInt returns a big Int composite of the digits in n
-func SliceToBigInt(n []int) *big.Int {
+// ToBigInt returns a big Int composite of the digits in n
+func ToBigInt(n []int64) *big.Int {
 	s := ""
 
 	for _, v := range n {
-		s += strconv.Itoa(v)
+		s += strconv.FormatInt(v, 10)
 	}
 
 	i, _ := big.NewInt(0).SetString(s, 10)
 	return i
 }
 
-// SliceToInt64 takes a slice of int64s and returns their composite int64
-func SliceToInt64(n []int64) int64 {
+// ToInt64 takes a slice of int64s and returns their composite int64
+func ToInt64(n []int64) int64 {
 	s := ""
 
 	for _, v := range n {
@@ -32,8 +32,8 @@ func SliceToInt64(n []int64) int64 {
 	return int64(i)
 }
 
-// SliceToInt takes a slice of ints and returns their composite int
-func SliceToInt(n []int) int {
+// ToInt takes a slice of ints and returns their composite int
+func ToInt(n []int) int {
 	s := ""
 
 	for _, v := range n {
@@ -44,8 +44,8 @@ func SliceToInt(n []int) int {
 	return i
 }
 
-// Int64ToSlice returns a number as a slice of its digits
-func Int64ToSlice(n int64) []int64 {
+// FromInt64 returns a number as a slice of its digits
+func FromInt64(n int64) []int64 {
 	nStrs, nInts := []byte((strconv.FormatInt(n, 10))), []int64{}
 
 	for _, v := range nStrs {
@@ -56,8 +56,8 @@ func Int64ToSlice(n int64) []int64 {
 	return nInts
 }
 
-// IntToSlice returns a number as a slice of its digits
-func IntToSlice(n int) []int {
+// FromInt returns a number as a slice of its digits
+func FromInt(n int) []int {
 	nStrs, nInts := []byte((strconv.Itoa(n))), []int{}
 
 	for _, v := range nStrs {
