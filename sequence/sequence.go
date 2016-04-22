@@ -27,6 +27,26 @@ func Primes() chan int64 {
 	return p
 }
 
+// PrimesBetween returns a channel with all primes between start and finish
+func PrimesBetween(start, finish int64) chan int64 {
+	c := make(chan int64)
+
+	go func() {
+		if start%2 == 0 {
+			start++
+		}
+
+		for i := start; i < finish; i += 2 {
+			if isit.Prime(i) {
+				c <- i
+			}
+		}
+		close(c)
+	}()
+
+	return c
+}
+
 // Fibonacci returns a channel of the Fibonacci sequence using big Ints
 func Fibonacci() chan *big.Int {
 	c := make(chan *big.Int)
