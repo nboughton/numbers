@@ -66,6 +66,29 @@ func PrimesFrom(start int64) chan int64 {
 	return c
 }
 
+// NPrimesFrom returns n conescutive primes starting from x
+func NPrimesFrom(x, n int64) chan int64 {
+	c := make(chan int64)
+
+	go func() {
+		if x%2 == 0 {
+			x++
+		}
+
+		count := int64(0)
+		for i := x; count < n; i += 2 {
+			if isit.Prime(i) {
+				c <- i
+				count++
+			}
+		}
+
+		close(c)
+	}()
+
+	return c
+}
+
 // Fibonacci returns a channel of the Fibonacci sequence using big Ints
 func Fibonacci() chan *big.Int {
 	c := make(chan *big.Int)
