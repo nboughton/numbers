@@ -285,7 +285,7 @@ Combinations functions found in github.com/ntns/goitertools/itertools */
 //
 //  Permutations([]int64{1, 2, 3}, 3) -> [[1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]]
 func Permutations(iterable []int64, r int64) chan []int64 {
-	ch := make(chan []int64)
+	ch := make(chan []int64, 1)
 	if r > int64(len(iterable)) || r == 0 {
 		close(ch)
 		return ch
@@ -353,7 +353,7 @@ func Permutations(iterable []int64, r int64) chan []int64 {
 // will be no repeat values in each combination.
 //  Combinations([]int64{1, 2, 3, 4, 5}, 4) -> [[1 2 3 4] [1 2 3 5] [1 2 4 5] [1 3 4 5] [2 3 4 5]]
 func Combinations(iterable []int64, r int64) chan []int64 {
-	ch := make(chan []int64)
+	ch := make(chan []int64, 1)
 	if r > int64(len(iterable)) || r == 0 {
 		close(ch)
 		return ch
