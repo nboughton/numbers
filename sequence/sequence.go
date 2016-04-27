@@ -186,13 +186,13 @@ func Triangles() <-chan int64 {
 	return c
 }
 
-// Hexagonals returns a channel of the hexagonal number sequence
-func Hexagonals() <-chan int64 {
+// Squares returns a channel of square numbers in sequence
+func Squares() <-chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
-			c <- i * (2*i - 1)
+			c <- i * i
 		}
 
 		close(c)
@@ -208,6 +208,51 @@ func Pentagonals() <-chan int64 {
 	go func() {
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (3*i - 1) / 2
+		}
+
+		close(c)
+	}()
+
+	return c
+}
+
+// Hexagonals returns a channel of the hexagonal number sequence
+func Hexagonals() <-chan int64 {
+	c := make(chan int64, 1)
+
+	go func() {
+		for i := int64(1); i < int64(math.MaxInt64); i++ {
+			c <- i * (2*i - 1)
+		}
+
+		close(c)
+	}()
+
+	return c
+}
+
+// Heptagonals returns a channel of the heptagonal number sequence
+func Heptagonals() <-chan int64 {
+	c := make(chan int64, 1)
+
+	go func() {
+		for i := int64(1); i < int64(math.MaxInt64); i++ {
+			c <- i * (5*i - 3) / 2
+		}
+
+		close(c)
+	}()
+
+	return c
+}
+
+// Octagonals returns a channel of the octagonal number sequence
+func Octagonals() <-chan int64 {
+	c := make(chan int64, 1)
+
+	go func() {
+		for i := int64(1); i < int64(math.MaxInt64); i++ {
+			c <- i * (3*i - 2)
 		}
 
 		close(c)
