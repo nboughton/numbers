@@ -4,27 +4,29 @@ Package sequence - functions for returning channels of sequences
 package sequence
 
 import (
-	"github.com/nboughton/numbers/isit"
+	"math"
 	"math/big"
+
+	"github.com/nboughton/numbers/isit"
 )
 
 // Primes returns a continuous channel of int64 Primes
 func Primes() <-chan int64 {
-	p := make(chan int64, 1)
+	c := make(chan int64, 1)
 
 	go func() {
-		p <- 2
+		c <- 2
 
-		for i := int64(3); true; i += 2 {
+		for i := int64(3); i < int64(math.MaxInt64); i += 2 {
 			if isit.Prime(i) {
-				p <- i
+				c <- i
 			}
 		}
 
-		close(p)
+		close(c)
 	}()
 
-	return p
+	return c
 }
 
 // PrimesBetween returns a channel with all primes between start and finish
@@ -50,12 +52,13 @@ func PrimesBetween(start, finish int64) <-chan int64 {
 // PrimesFrom returns a channel of primes from start
 func PrimesFrom(start int64) <-chan int64 {
 	c := make(chan int64, 1)
-	if start%2 == 0 {
-		start++
-	}
 
 	go func() {
-		for i := start; true; i++ {
+		if start%2 == 0 {
+			start++
+		}
+
+		for i := start; i < int64(math.MaxInt64); i++ {
 			if isit.Prime(i) {
 				c <- i
 			}
@@ -111,13 +114,9 @@ func Fibonacci() <-chan *big.Int {
 // BigInts returns a continuous stream of big Ints integers from 1
 func BigInts() <-chan *big.Int {
 	c := make(chan *big.Int, 1)
-	i := big.NewInt(1)
 
 	go func() {
-		c <- i
-
-		for true {
-			i.Add(i, big.NewInt(1))
+		for i := big.NewInt(1); true; i.Add(i, big.NewInt(1)) {
 			c <- i
 		}
 
@@ -130,13 +129,9 @@ func BigInts() <-chan *big.Int {
 // Ints returns a continuous channel of integers from 1
 func Ints() <-chan int64 {
 	c := make(chan int64, 1)
-	i := int64(1)
 
 	go func() {
-		c <- i
-
-		for true {
-			i++
+		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i
 		}
 
@@ -149,13 +144,9 @@ func Ints() <-chan int64 {
 // Evens returns a continuous channel of even numbers from 2
 func Evens() <-chan int64 {
 	c := make(chan int64, 1)
-	i := int64(2)
 
 	go func() {
-		c <- i
-
-		for true {
-			i += 2
+		for i := int64(2); i < int64(math.MaxInt64); i += 2 {
 			c <- i
 		}
 
@@ -168,13 +159,9 @@ func Evens() <-chan int64 {
 // Odds returns a continuous channel of odd numbers from 1
 func Odds() <-chan int64 {
 	c := make(chan int64, 1)
-	i := int64(1)
 
 	go func() {
-		c <- i
-
-		for true {
-			i += 2
+		for i := int64(1); i < int64(math.MaxInt64); i += 2 {
 			c <- i
 		}
 
@@ -189,9 +176,10 @@ func Triangles() <-chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
-		for i := int64(0); true; i++ {
+		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (i + 1) / 2
 		}
+
 		close(c)
 	}()
 
@@ -201,13 +189,12 @@ func Triangles() <-chan int64 {
 // Hexagonals returns a channel of the hexagonal number sequence
 func Hexagonals() <-chan int64 {
 	c := make(chan int64, 1)
-	i := int64(1)
 
 	go func() {
-		for true {
+		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (2*i - 1)
-			i++
 		}
+
 		close(c)
 	}()
 
@@ -217,13 +204,12 @@ func Hexagonals() <-chan int64 {
 // Pentagonals returns a channel of the pentagonal number sequence
 func Pentagonals() <-chan int64 {
 	c := make(chan int64, 1)
-	i := int64(1)
 
 	go func() {
-		for true {
+		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (3*i - 1) / 2
-			i++
 		}
+
 		close(c)
 	}()
 
@@ -339,6 +325,7 @@ func Permutations(iterable []int64, r int64) <-chan []int64 {
 				break
 			}
 		}
+
 		close(ch)
 	}()
 
