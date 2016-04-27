@@ -23,19 +23,19 @@ func PyTriplet(a, b, c int64) bool {
 	return false
 }
 
-// Triangular returns true is n is a triangular number
+// Triangular returns true if n is a triangular number
 func Triangular(n int64) bool {
 	i, f := math.Modf((math.Sqrt(float64(8*n+1)) - 1) / 2)
-	if f == 0 && i > 1 {
+	if f == 0 && i >= 1 {
 		return true
 	}
 	return false
 }
 
-// Hexagonal returns true if n is a hexagonal number
-func Hexagonal(n int64) bool {
-	i, f := math.Modf((math.Sqrt(float64(8*n+1)) + 1) / 4)
-	if f == 0 && i > 1 {
+// Square returns true if n is a square number
+func Square(n int64) bool {
+	i, f := math.Modf(math.Sqrt(float64(n)))
+	if f == 0 && i >= 1 {
 		return true
 	}
 	return false
@@ -44,7 +44,34 @@ func Hexagonal(n int64) bool {
 // Pentagonal returns true if n is a pentagonal number
 func Pentagonal(n int64) bool {
 	i, f := math.Modf((math.Sqrt(float64(24*n+1)) + 1) / 6)
-	if f == 0 && i > 0 {
+	if f == 0 && i >= 0 {
+		return true
+	}
+	return false
+}
+
+// Hexagonal returns true if n is a hexagonal number
+func Hexagonal(n int64) bool {
+	i, f := math.Modf((math.Sqrt(float64(8*n+1)) + 1) / 4)
+	if f == 0 && i >= 1 {
+		return true
+	}
+	return false
+}
+
+// Heptagonal returns true if n is a heptagonal number
+func Heptagonal(n int64) bool {
+	i, f := math.Modf((math.Sqrt(float64(40*n+9)) + 3) / 10)
+	if f == 0 && i >= 1 {
+		return true
+	}
+	return false
+}
+
+// Octagonal returns true if n is an octagonal number
+func Octagonal(n int64) bool {
+	i, f := math.Modf((math.Sqrt(float64(3*n+1)) + 1) / 3)
+	if f == 0 && i >= 1 {
 		return true
 	}
 	return false
@@ -63,7 +90,7 @@ func UniqueCharString(b []byte) bool {
 	return true
 }
 
-// Palindrome returns true if b is a palindrome, false if not
+// Palindrome returns true if b is a palindrome
 func Palindrome(b []byte) bool {
 	left, right := []byte{}, []byte{}
 	if len(b)%2 == 0 {
