@@ -58,7 +58,7 @@ func PrimesFrom(start int64) <-chan int64 {
 			start++
 		}
 
-		for i := start; i < int64(math.MaxInt64); i++ {
+		for i := start; i < int64(math.MaxInt64); i += 2 {
 			if isit.Prime(i) {
 				c <- i
 			}
