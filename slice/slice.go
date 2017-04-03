@@ -46,24 +46,24 @@ func ToInt(n []int) int {
 
 // FromInt64 returns a number as a slice of its digits
 func FromInt64(n int64) []int64 {
-	nInts := []int64{}
+	s := strconv.FormatInt(n, 10)
+	ints := make([]int64, len(s))
 
-	for _, v := range strconv.FormatInt(n, 10) {
-		i, _ := strconv.ParseInt(string(v), 10, 64)
-		nInts = append(nInts, i)
+	for i, v := range s {
+		ints[i], _ = strconv.ParseInt(string(v), 10, 64)
 	}
 
-	return nInts
+	return ints
 }
 
 // FromInt returns a number as a slice of its digits
 func FromInt(n int) []int {
-	nInts := []int{}
+	s := strconv.Itoa(n)
+	ints := make([]int, len(s))
 
-	for _, v := range strconv.Itoa(n) {
-		i, _ := strconv.Atoi(string(v))
-		nInts = append(nInts, i)
+	for i, v := range s {
+		ints[i], _ = strconv.Atoi(string(v))
 	}
 
-	return nInts
+	return ints
 }
