@@ -48,7 +48,7 @@ func ToInt(n []int) int {
 func FromInt64(n int64) []int64 {
 	nInts := []int64{}
 
-	for _, v := range []byte((strconv.FormatInt(n, 10))) {
+	for _, v := range strconv.FormatInt(n, 10) {
 		i, _ := strconv.ParseInt(string(v), 10, 64)
 		nInts = append(nInts, i)
 	}
@@ -60,7 +60,7 @@ func FromInt64(n int64) []int64 {
 func FromInt(n int) []int {
 	nInts := []int{}
 
-	for _, v := range []byte((strconv.Itoa(n))) {
+	for _, v := range strconv.Itoa(n) {
 		i, _ := strconv.Atoi(string(v))
 		nInts = append(nInts, i)
 	}
