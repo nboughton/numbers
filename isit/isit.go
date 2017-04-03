@@ -92,18 +92,10 @@ func UniqueCharString(b []byte) bool {
 
 // Palindrome returns true if b is a palindrome
 func Palindrome(b []byte) bool {
-	left, right := []byte{}, []byte{}
-	if len(b)%2 == 0 {
-		left = b[:len(b)/2]
-	} else {
-		left = b[:len(b)/2+1]
-	}
-	right = b[len(b)/2:]
-
-	reverseRight := []byte{}
-	for i := len(right) - 1; i >= 0; i-- {
-		reverseRight = append(reverseRight, right[i])
+	dst := make([]byte, len(b))
+	for i := 0; i < len(b); i++ {
+		dst[i] = b[len(b)-1-i]
 	}
 
-	return reflect.DeepEqual(left, reverseRight)
+	return reflect.DeepEqual(dst, b)
 }
