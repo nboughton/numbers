@@ -7,7 +7,6 @@ package isit
 import (
 	"math"
 	"math/big"
-	"reflect"
 )
 
 // Prime returns true if n is prime
@@ -97,5 +96,5 @@ func Palindrome(b []byte) bool {
 		dst[i] = b[len(b)-1-i]
 	}
 
-	return reflect.DeepEqual(dst, b)
+	return string(dst) == string(b)
 }
