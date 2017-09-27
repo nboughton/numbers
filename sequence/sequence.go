@@ -34,6 +34,10 @@ func PrimesBetween(start, finish int64) <-chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		if start == 2 {
+			c <- start
+		}
+
 		if start%2 == 0 {
 			start++
 		}
@@ -54,6 +58,10 @@ func PrimesFrom(start int64) <-chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		if start == 2 {
+			c <- start
+		}
+
 		if start%2 == 0 {
 			start++
 		}
@@ -70,16 +78,20 @@ func PrimesFrom(start int64) <-chan int64 {
 }
 
 // NPrimesFrom returns n conescutive primes starting from x
-func NPrimesFrom(x, n int64) <-chan int64 {
+func NPrimesFrom(start, n int64) <-chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
-		if x%2 == 0 {
-			x++
+		if start == 2 {
+			c <- start
+		}
+
+		if start%2 == 0 {
+			start++
 		}
 
 		count := int64(0)
-		for i := x; count < n; i += 2 {
+		for i := start; count < n; i += 2 {
 			if isit.Prime(i) {
 				c <- i
 				count++
@@ -92,7 +104,8 @@ func NPrimesFrom(x, n int64) <-chan int64 {
 	return c
 }
 
-// Fibonacci returns a channel of the Fibonacci sequence using big Ints
+// Fibonacci returns a channel of the Fibonacci sequence using big Ints.
+// Big ints are used because of the exponential growth of Fibonacci numbers.
 func Fibonacci() <-chan *big.Int {
 	c := make(chan *big.Int, 1)
 
