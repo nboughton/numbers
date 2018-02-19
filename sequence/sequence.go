@@ -11,7 +11,7 @@ import (
 )
 
 // Primes returns a continuous channel of int64 Primes
-func Primes() <-chan int64 {
+func Primes() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -30,31 +30,24 @@ func Primes() <-chan int64 {
 }
 
 // PrimesBetween returns a channel with all primes between start and finish
-func PrimesBetween(start, finish int64) <-chan int64 {
+func PrimesBetween(start, finish int64) chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
-		if start == 2 {
-			c <- start
-		}
+		defer close(c)
 
-		if start%2 == 0 {
-			start++
-		}
-
-		for i := start; i < finish; i += 2 {
-			if isit.Prime(i) {
+		for i := range PrimeSieve(finish) {
+			if i > start {
 				c <- i
 			}
 		}
-		close(c)
 	}()
 
 	return c
 }
 
 // PrimesFrom returns a channel of primes from start
-func PrimesFrom(start int64) <-chan int64 {
+func PrimesFrom(start int64) chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -78,7 +71,7 @@ func PrimesFrom(start int64) <-chan int64 {
 }
 
 // NPrimesFrom returns n conescutive primes starting from x
-func NPrimesFrom(start, n int64) <-chan int64 {
+func NPrimesFrom(start, n int64) chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -104,9 +97,35 @@ func NPrimesFrom(start, n int64) <-chan int64 {
 	return c
 }
 
+// PrimeSieve impements the Sieve of Eratosthenes and returns the streamed channel
+// of results so that the program can cut off iteration where necessary
+func PrimeSieve(value int64) chan int64 {
+	f, c := make([]bool, value), make(chan int64)
+
+	for i := int64(2); i <= int64(math.Sqrt(float64(value))); i++ {
+		if f[i] == false {
+			for j := i * i; j < value; j += i {
+				f[j] = true
+			}
+		}
+	}
+
+	go func() {
+		defer close(c)
+
+		for i := int64(2); i < value; i++ {
+			if f[i] == false {
+				c <- i
+			}
+		}
+	}()
+
+	return c
+}
+
 // Fibonacci returns a channel of the Fibonacci sequence using big Ints.
 // Big ints are used because of the exponential growth of Fibonacci numbers.
-func Fibonacci() <-chan *big.Int {
+func Fibonacci() chan *big.Int {
 	c := make(chan *big.Int, 1)
 
 	go func() {
@@ -125,7 +144,7 @@ func Fibonacci() <-chan *big.Int {
 }
 
 // BigInts returns a continuous stream of big Ints integers from 1
-func BigInts() <-chan *big.Int {
+func BigInts() chan *big.Int {
 	c := make(chan *big.Int, 1)
 
 	go func() {
@@ -140,7 +159,7 @@ func BigInts() <-chan *big.Int {
 }
 
 // Ints returns a continuous channel of integers from 1
-func Ints() <-chan int64 {
+func Ints() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -155,7 +174,7 @@ func Ints() <-chan int64 {
 }
 
 // Evens returns a continuous channel of even numbers from 2
-func Evens() <-chan int64 {
+func Evens() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -170,7 +189,7 @@ func Evens() <-chan int64 {
 }
 
 // Odds returns a continuous channel of odd numbers from 1
-func Odds() <-chan int64 {
+func Odds() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -185,7 +204,7 @@ func Odds() <-chan int64 {
 }
 
 // Triangles returns a channel of the triangle number sequence
-func Triangles() <-chan int64 {
+func Triangles() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -200,7 +219,7 @@ func Triangles() <-chan int64 {
 }
 
 // Squares returns a channel of square numbers in sequence
-func Squares() <-chan int64 {
+func Squares() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -215,7 +234,7 @@ func Squares() <-chan int64 {
 }
 
 // Pentagonals returns a channel of the pentagonal number sequence
-func Pentagonals() <-chan int64 {
+func Pentagonals() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -230,7 +249,7 @@ func Pentagonals() <-chan int64 {
 }
 
 // Hexagonals returns a channel of the hexagonal number sequence
-func Hexagonals() <-chan int64 {
+func Hexagonals() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -245,7 +264,7 @@ func Hexagonals() <-chan int64 {
 }
 
 // Heptagonals returns a channel of the heptagonal number sequence
-func Heptagonals() <-chan int64 {
+func Heptagonals() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -260,7 +279,7 @@ func Heptagonals() <-chan int64 {
 }
 
 // Octagonals returns a channel of the octagonal number sequence
-func Octagonals() <-chan int64 {
+func Octagonals() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
@@ -276,7 +295,7 @@ func Octagonals() <-chan int64 {
 
 // Rotations returns a sequence of rotations of n.
 // I.e Rotations(123) = 123 -> 312 -> 231
-func Rotations(n int64) <-chan int64 {
+func Rotations(n int64) chan int64 {
 	rts := make(chan int64, 1)
 
 	go func() {
@@ -299,7 +318,7 @@ func Rotations(n int64) <-chan int64 {
 // Truncate returns a channel of int64 slices that contain the
 // truncation sequence of n from the left and the right simultaneously.
 // I.e Truncate(123) = [123, 123] -> [23, 12] -> [3, 1]
-func Truncate(n int64) <-chan []int64 {
+func Truncate(n int64) chan []int64 {
 	c := make(chan []int64, 1)
 
 	go func() {
@@ -328,7 +347,7 @@ Combinations functions found in github.com/ntns/goitertools/itertools */
 // will be no repeat values in each permutation.
 //
 //  Permutations([]int64{1, 2, 3}, 3) -> [[1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]]
-func Permutations(iterable []int64, r int64) <-chan []int64 {
+func Permutations(iterable []int64, r int64) chan []int64 {
 	ch := make(chan []int64, 1)
 	if r > int64(len(iterable)) || r == 0 {
 		close(ch)
@@ -397,7 +416,7 @@ func Permutations(iterable []int64, r int64) <-chan []int64 {
 // not on their value. So if the input elements are unique, there
 // will be no repeat values in each combination.
 //  Combinations([]int64{1, 2, 3, 4, 5}, 4) -> [[1 2 3 4] [1 2 3 5] [1 2 4 5] [1 3 4 5] [2 3 4 5]]
-func Combinations(iterable []int64, r int64) <-chan []int64 {
+func Combinations(iterable []int64, r int64) chan []int64 {
 	ch := make(chan []int64, 1)
 	if r > int64(len(iterable)) || r == 0 {
 		close(ch)
