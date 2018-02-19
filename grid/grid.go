@@ -3,6 +3,10 @@ Package grid - functions for getting grid vectors, isiting vector paths and crea
 */
 package grid
 
+import (
+	"math"
+)
+
 /*
 GetVector returns int64 slice of coord slices according to direction:
 
@@ -61,6 +65,36 @@ func SafeVector(v [][]int64, lim int64) bool {
 		}
 	}
 	return true
+}
+
+/*
+	Consider the following:
+	[]int{
+		[]int{25,10,11,12,13},
+		[]int{24,09,02,03,14},
+		[]int{23,08,01,04,15},
+		[]int{22,07,06,05,16},
+		[]int{21,20,19,18,17}
+	}
+*/
+
+func NumberSpiral(width int) [][]int {
+	if width%2 == 0 {
+		width++
+	}
+
+	grid := make([][]int, width)
+	for i := range grid {
+		grid[i] = make([]int, width)
+	}
+
+	r, c := width/2, width/2
+	grid[r][c] = 1
+	for i := 1; i <= math.Pow(float64(width), 3); i++ {
+
+	}
+
+	return grid
 }
 
 // Creates a grid that contains a number spiral, n must
