@@ -15,6 +15,8 @@ func Primes() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		c <- 2
 
 		for i := int64(3); i < int64(math.MaxInt64); i += 2 {
@@ -22,8 +24,6 @@ func Primes() chan int64 {
 				c <- i
 			}
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -51,6 +51,8 @@ func PrimesFrom(start int64) chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		if start == 2 {
 			c <- start
 		}
@@ -64,7 +66,6 @@ func PrimesFrom(start int64) chan int64 {
 				c <- i
 			}
 		}
-		close(c)
 	}()
 
 	return c
@@ -75,6 +76,8 @@ func NPrimesFrom(start, n int64) chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		if start == 2 {
 			c <- start
 		}
@@ -90,8 +93,6 @@ func NPrimesFrom(start, n int64) chan int64 {
 				count++
 			}
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -102,16 +103,16 @@ func NPrimesFrom(start, n int64) chan int64 {
 func PrimeSieve(value int64) chan int64 {
 	f, c := make([]bool, value), make(chan int64)
 
-	for i := int64(2); i <= int64(math.Sqrt(float64(value))); i++ {
-		if f[i] == false {
-			for j := i * i; j < value; j += i {
-				f[j] = true
-			}
-		}
-	}
-
 	go func() {
 		defer close(c)
+
+		for i := int64(2); i <= int64(math.Sqrt(float64(value))); i++ {
+			if f[i] == false {
+				for j := i * i; j < value; j += i {
+					f[j] = true
+				}
+			}
+		}
 
 		for i := int64(2); i < value; i++ {
 			if f[i] == false {
@@ -129,6 +130,8 @@ func Fibonacci() chan *big.Int {
 	c := make(chan *big.Int, 1)
 
 	go func() {
+		defer close(c)
+
 		a, b := big.NewInt(0), big.NewInt(1)
 
 		for true {
@@ -136,8 +139,6 @@ func Fibonacci() chan *big.Int {
 			a, b = b, a
 			c <- a
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -148,11 +149,11 @@ func BigInts() chan *big.Int {
 	c := make(chan *big.Int, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := big.NewInt(1); true; i.Add(i, big.NewInt(1)) {
 			c <- i
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -163,11 +164,11 @@ func Ints() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -178,11 +179,11 @@ func Evens() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(2); i < int64(math.MaxInt64); i += 2 {
 			c <- i
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -193,11 +194,11 @@ func Odds() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(1); i < int64(math.MaxInt64); i += 2 {
 			c <- i
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -208,11 +209,11 @@ func Triangles() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (i + 1) / 2
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -223,11 +224,11 @@ func Squares() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * i
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -238,11 +239,11 @@ func Pentagonals() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (3*i - 1) / 2
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -253,11 +254,11 @@ func Hexagonals() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (2*i - 1)
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -268,11 +269,11 @@ func Heptagonals() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (5*i - 3) / 2
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -283,11 +284,11 @@ func Octagonals() chan int64 {
 	c := make(chan int64, 1)
 
 	go func() {
+		defer close(c)
+
 		for i := int64(1); i < int64(math.MaxInt64); i++ {
 			c <- i * (3*i - 2)
 		}
-
-		close(c)
 	}()
 
 	return c
@@ -299,6 +300,8 @@ func Rotations(n int64) chan int64 {
 	rts := make(chan int64, 1)
 
 	go func() {
+		defer close(rts)
+
 		s := []byte(big.NewInt(n).String())
 
 		for i := 0; i < len(s); i++ {
@@ -308,8 +311,6 @@ func Rotations(n int64) chan int64 {
 			rts <- m.Int64()
 			s = t
 		}
-
-		close(rts)
 	}()
 
 	return rts
@@ -355,6 +356,8 @@ func Permutations(iterable []int64, r int64) chan []int64 {
 	}
 
 	go func() {
+		defer close(ch)
+
 		pool := iterable
 		n := int64(len(pool))
 
@@ -402,8 +405,6 @@ func Permutations(iterable []int64, r int64) chan []int64 {
 				break
 			}
 		}
-
-		close(ch)
 	}()
 
 	return ch
@@ -424,6 +425,8 @@ func Combinations(iterable []int64, r int64) chan []int64 {
 	}
 
 	go func() {
+		defer close(ch)
+
 		pool := iterable
 		n := int64(len(pool))
 
@@ -461,8 +464,6 @@ func Combinations(iterable []int64, r int64) chan []int64 {
 
 			ch <- result
 		}
-
-		close(ch)
 	}()
 
 	return ch
