@@ -78,7 +78,7 @@ func SafeVector(v [][]int64, lim int64) bool {
 	}
 */
 
-func NumberSpiral(width int) [][]int {
+func numberSpiral(width int) [][]int {
 	if width%2 == 0 {
 		width++
 	}
@@ -90,14 +90,14 @@ func NumberSpiral(width int) [][]int {
 
 	r, c := width/2, width/2
 	grid[r][c] = 1
-	for i := 1; i <= math.Pow(float64(width), 3); i++ {
+	for i := 1; i <= int(math.Pow(float64(width), 3)); i++ {
 
 	}
 
 	return grid
 }
 
-// Creates a grid that contains a number spiral, n must
+// CreateNumberSpiral creates a grid that contains a number spiral, n must
 // be odd. If not it is incremented to become odd
 func CreateNumberSpiral(n int64) [][]int64 {
 	if n%2 == 0 {
