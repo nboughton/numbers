@@ -115,7 +115,7 @@ func PrimeSieve(value int64) chan int64 {
 		}
 
 		for i := int64(2); i < value; i++ {
-			if f[i] == false {
+			if !f[i] {
 				c <- i
 			}
 		}
