@@ -124,6 +124,29 @@ func PrimeSieve(value int64) chan int64 {
 	return c
 }
 
+// PellLucas streams n iterations of the Pell/Pell-Lucas sequence. These can
+// be used as approximations for the continued fraction of the square root of 2
+func PellLucas(n int64) chan [2]*big.Int {
+	a, b, r := big.NewInt(0), big.NewInt(1), make(chan [2]*big.Int)
+
+	go func() {
+		defer close(r)
+
+		for i := int64(0); i < n; i++ {
+			c, _ := big.NewInt(0).SetString(a.String(), 10)
+
+			a.Add(a, big.NewInt(0).Mul(big.NewInt(2), b))
+			a, b = b, a
+
+			c.Add(c, a)
+
+			r <- [2]*big.Int{big.NewInt(0).Set(c), big.NewInt(0).Set(a)}
+		}
+	}()
+
+	return r
+}
+
 // Fibonacci returns a channel of the Fibonacci sequence using big Ints.
 // Big ints are used because of the exponential growth of Fibonacci numbers.
 func Fibonacci() chan *big.Int {
