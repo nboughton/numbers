@@ -18,6 +18,17 @@ func (s Int64) Contains(n int64) bool {
 	return false
 }
 
+// Sum returns the sum total of the set
+func (s Int64) Sum() int64 {
+	var t int64
+
+	for _, n := range s {
+		t += n
+	}
+
+	return t
+}
+
 // Int64s is a slice of slices of int64
 type Int64s []Int64
 
