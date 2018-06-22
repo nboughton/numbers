@@ -1,5 +1,9 @@
 package set
 
+import (
+	"sort"
+)
+
 // Int64 is a slice of int64
 type Int64 []int64
 
@@ -27,6 +31,26 @@ func (s Int64) Sum() int64 {
 	}
 
 	return t
+}
+
+// Dedupe returns a set with only unique values
+func (s Int64) Dedupe() Int64 {
+	var (
+		m   = make(map[int64]int)
+		res Int64
+	)
+
+	for _, n := range s {
+		m[n]++
+	}
+
+	for k := range m {
+		res = append(res, k)
+	}
+
+	sort.Sort(res)
+
+	return res
 }
 
 // Int64s is a slice of slices of int64
