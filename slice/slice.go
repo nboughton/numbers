@@ -44,6 +44,17 @@ func ToInt(n []int) int {
 	return int(i)
 }
 
+// FromBigInt returns a big int as a slice of its digits
+func FromBigInt(n *big.Int) []int64 {
+	ints := make([]int64, len(n.String()))
+
+	for i, char := range n.String() {
+		ints[i], _ = strconv.ParseInt(string(char), 10, 64)
+	}
+
+	return ints
+}
+
 // FromInt64 returns a number as a slice of its digits
 func FromInt64(n int64) []int64 {
 	s := strconv.FormatInt(n, 10)
