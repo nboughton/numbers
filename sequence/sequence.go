@@ -167,6 +167,26 @@ func Fibonacci() chan *big.Int {
 	return c
 }
 
+// Collatz returns the Collatz sequence starting at n
+func Collatz(n int64) []int64 {
+	seq := []int64{n}
+
+	for {
+		n = seq[len(seq)-1]
+		if n <= 1 {
+			break
+		}
+
+		if n%2 == 0 {
+			seq = append(seq, n/2)
+		} else {
+			seq = append(seq, 3*n+1)
+		}
+	}
+
+	return seq
+}
+
 // BigInts returns a continuous stream of big Ints integers from 1
 func BigInts() chan *big.Int {
 	c := make(chan *big.Int, 1)
