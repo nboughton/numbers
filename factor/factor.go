@@ -4,18 +4,18 @@ Package factor - provides functions for return factors, divisors and factorials
 package factor
 
 import (
-	//"fmt"
-	"github.com/cznic/sortutil"
-	"github.com/nboughton/numbers/isit"
-	"github.com/nboughton/numbers/total"
 	"math"
 	"math/big"
 	"strconv"
+
+	"github.com/nboughton/numbers/isit"
+	"github.com/nboughton/numbers/set"
+	"github.com/nboughton/numbers/total"
 )
 
 // Primes returns int64 slice of prime factors of n
-func Primes(n int64) []int64 {
-	p := []int64{}
+func Primes(n int64) set.Int64 {
+	p := set.Int64{}
 
 	for _, v := range Divisors(n) {
 		if isit.Prime(v) {
@@ -27,8 +27,8 @@ func Primes(n int64) []int64 {
 }
 
 // Divisors returns int64 slice of divisors of n
-func Divisors(n int64) []int64 {
-	f, t := []int64{}, int64(math.Sqrt(float64(n)))
+func Divisors(n int64) set.Int64 {
+	f, t := set.Int64{}, int64(math.Sqrt(float64(n)))
 
 	for i := int64(1); i <= t; i++ {
 		if n%i == 0 {
@@ -39,8 +39,7 @@ func Divisors(n int64) []int64 {
 		}
 	}
 
-	sortutil.Int64Slice(f).Sort()
-	sortutil.Dedupe(sortutil.Int64Slice(f))
+	f.Dedupe()
 	return f
 }
 

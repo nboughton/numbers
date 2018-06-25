@@ -1,6 +1,7 @@
 package set
 
 import (
+	"fmt"
 	"sort"
 )
 
@@ -33,7 +34,7 @@ func (s Int64) Sum() int64 {
 	return t
 }
 
-// Dedupe returns a set with only unique values
+// Dedupe returns a sorted set with only unique values
 func (s Int64) Dedupe() Int64 {
 	var (
 		m   = make(map[int64]int)
@@ -75,4 +76,84 @@ func (s Int64s) Find(n int64) chan Int64 {
 	}()
 
 	return c
+}
+
+// MaxPathSum returns the maximum value available in a path through
+// a numerical grid, i.e a Set of sets
+func (s Int64s) MaxPathSum() int64 {
+	for row := len(s) - 2; row >= 0; row-- {
+		for col := 0; col < len(s[row])-1; col++ {
+			if s[row+1][col] > s[row+1][col+1] {
+				s[row][col] += s[row+1][col]
+			} else {
+				s[row][col] += s[row+1][col+1]
+			}
+		}
+	}
+
+	return s[0][0]
+}
+
+// Using Int64s as a grid
+
+// Direction represents an identifier for vector direction
+type Direction int
+
+// Coord represents the values of coordinates within a grid
+type Coord struct {
+	Row int64
+	Col int64
+}
+
+// Vector Directions constants
+const (
+	LTR  Direction = iota // Left To Right
+	RTL                   // Right To Left
+	UP                    // Up
+	DOWN                  // Down
+	LTRU                  // Left To Right Up (diagonal)
+	LTRD                  // Left To Right Down (diagonal)
+	RTLU                  // Right To Left Up (diagonal)
+	RTLD                  // Right To Left Down (diagonal)
+)
+
+// Vector returns a ln length set of values starting at row/col extending in Direction d
+func (s Int64s) Vector(r, c, ln int64, d Direction) (Int64, error) {
+	var (
+		crds = make([]Coord, ln)
+		res  Int64
+	)
+
+	// Get coords
+	for i := int64(0); i < ln; i++ {
+		switch d {
+		case LTR:
+			crds = append(crds, Coord{r, c + i})
+		case RTL:
+			crds = append(crds, Coord{r, c - i})
+		case DOWN:
+			crds = append(crds, Coord{r + i, c})
+		case UP:
+			crds = append(crds, Coord{r - i, c})
+		case LTRD:
+			crds = append(crds, Coord{r + i, c + i})
+		case RTLD:
+			crds = append(crds, Coord{r + i, c - i})
+		case LTRU:
+			crds = append(crds, Coord{r - i, c + i})
+		case RTLU:
+			crds = append(crds, Coord{r - i, c - i})
+		}
+	}
+
+	// Iterate coords to create result
+	for _, crd := range crds {
+		if crd.Row > int64(len(s)) || crd.Row < 0 || crd.Col > int64(len(s[crd.Row])) || crd.Col < 0 {
+			return nil, fmt.Errorf("Vector out of bounds [ROW|COL]:[%d|%d]", crd.Row, crd.Col)
+		}
+
+		res = append(res, s[crd.Row][crd.Col])
+	}
+
+	return res, nil
 }
