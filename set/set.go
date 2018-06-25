@@ -94,7 +94,57 @@ func (s Int64s) MaxPathSum() int64 {
 	return s[0][0]
 }
 
-// Using Int64s as a grid
+/* Using Int64s as a grid
+Consider the following:
+[]int{
+	[]int{25,10,11,12,13},
+	[]int{24,09,02,03,14},
+	[]int{23,08,01,04,15},
+	[]int{22,07,06,05,16},
+	[]int{21,20,19,18,17}
+}
+*/
+
+// NewNumberSpiral creates a square grid number spiral of width size. If size is even it is incremented
+// to become odd.
+/*
+func NewNumberSpiral(size int64) Int64s {
+	if size%2 == 0 {
+		size++
+	}
+
+	grid := make(Int64s, size)
+	for row := range grid {
+		grid[row] = make(Int64, size)
+	}
+
+	// Starting from the center head up 1...
+	row, col, max := size/2, size/2, size*size
+	inc, turn := int64(1), int64(0)
+
+	for i := int64(1); i <= max; i++ {
+
+		// Print update after each line
+		for _, r := range grid {
+			fmt.Println(r)
+		}
+	}
+
+	return grid
+}
+*/
+/*
+	switch {
+			case d == UP:
+				grid[row-1][col] = i
+			case d == LTR:
+				grid[row][col+1] = i
+			case d == DOWN:
+				grid[row+1][col] = i
+			case d == RTL:
+				grid[row][col-1] = i
+			}
+*/
 
 // Direction represents an identifier for vector direction
 type Direction int
@@ -117,39 +167,39 @@ const (
 	RTLD                  // Right To Left Down (diagonal)
 )
 
-// Vector returns a ln length set of values starting at row/col extending in Direction d
-func (s Int64s) Vector(r, c, ln int64, d Direction) (Int64, error) {
-	var (
-		crds = make([]Coord, ln)
-		res  Int64
-	)
+// Vector returns a ln length set of values starting at row/col extending in Direction d.
+// If supplied Vector will set the values to n (in order)
+func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, error) {
+	var res Int64
 
-	// Get coords
 	for i := int64(0); i < ln; i++ {
+		crd := Coord{}
+
 		switch d {
 		case LTR:
-			crds = append(crds, Coord{r, c + i})
+			crd = Coord{r, c + i}
 		case RTL:
-			crds = append(crds, Coord{r, c - i})
+			crd = Coord{r, c - i}
 		case DOWN:
-			crds = append(crds, Coord{r + i, c})
+			crd = Coord{r + i, c}
 		case UP:
-			crds = append(crds, Coord{r - i, c})
+			crd = Coord{r - i, c}
 		case LTRD:
-			crds = append(crds, Coord{r + i, c + i})
+			crd = Coord{r + i, c + i}
 		case RTLD:
-			crds = append(crds, Coord{r + i, c - i})
+			crd = Coord{r + i, c - i}
 		case LTRU:
-			crds = append(crds, Coord{r - i, c + i})
+			crd = Coord{r - i, c + i}
 		case RTLU:
-			crds = append(crds, Coord{r - i, c - i})
+			crd = Coord{r - i, c - i}
 		}
-	}
 
-	// Iterate coords to create result
-	for _, crd := range crds {
 		if crd.Row > int64(len(s)) || crd.Row < 0 || crd.Col > int64(len(s[crd.Row])) || crd.Col < 0 {
 			return nil, fmt.Errorf("Vector out of bounds [ROW|COL]:[%d|%d]", crd.Row, crd.Col)
+		}
+
+		if i < int64(len(n)) {
+			s[crd.Row][crd.Col] = n[i]
 		}
 
 		res = append(res, s[crd.Row][crd.Col])
