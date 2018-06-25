@@ -174,9 +174,12 @@ const (
 )
 
 // Vector returns a ln length set of values starting at row/col extending in Direction d.
+// Vector also returns the coordinates of those values.
 // If supplied Vector will set the values to n (in order)
-func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, error) {
-	var res Int64
+func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, []Coord, error) {
+	var (
+		res Int64
+		crds = make([]Coord, ln)
 
 	for i := int64(0); i < ln; i++ {
 		crd := Coord{}
@@ -201,7 +204,7 @@ func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, error) {
 		}
 
 		if crd.Row > int64(len(s)) || crd.Row < 0 || crd.Col > int64(len(s[crd.Row])) || crd.Col < 0 {
-			return nil, fmt.Errorf("Vector out of bounds [ROW|COL]:[%d|%d]", crd.Row, crd.Col)
+			return nil, nil, fmt.Errorf("Vector out of bounds [ROW|COL]:[%d|%d]", crd.Row, crd.Col)
 		}
 
 		if i < int64(len(n)) {
@@ -209,6 +212,7 @@ func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, error) {
 		}
 
 		res = append(res, s[crd.Row][crd.Col])
+		crds = append(crds, crd)
 	}
 
 	return res, nil
