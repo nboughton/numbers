@@ -108,6 +108,12 @@ Consider the following:
 // NewNumberSpiral creates a square grid number spiral of width size. If size is even it is incremented
 // to become odd.
 /*
+CONSIDER:
+for i := 1; i < max; i += inc {
+	inc increases every 2nd and 4th turn
+	use vector, supply n = i..{i+inc}
+}
+
 func NewNumberSpiral(size int64) Int64s {
 	if size%2 == 0 {
 		size++
