@@ -34,6 +34,17 @@ func (s Int64) Sum() int64 {
 	return t
 }
 
+// Product returns the product of the set
+func (s Int64) Product() int64 {
+	t := s[0]
+
+	for _, n := range s[1:] {
+		t *= n
+	}
+
+	return t
+}
+
 // Dedupe returns a sorted set with only unique values
 func (s Int64) Dedupe() Int64 {
 	var (
@@ -204,7 +215,7 @@ func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, []Coord,
 			crd = Coord{r - i, c - i}
 		}
 
-		if crd.Row > int64(len(s)) || crd.Row < 0 || crd.Col > int64(len(s[crd.Row])) || crd.Col < 0 {
+		if crd.Row >= int64(len(s)) || crd.Row < 0 || crd.Col >= int64(len(s[crd.Row])) || crd.Col < 0 {
 			return nil, nil, fmt.Errorf("Vector out of bounds [ROW|COL]:[%d|%d]", crd.Row, crd.Col)
 		}
 
