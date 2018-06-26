@@ -178,8 +178,9 @@ const (
 // If supplied Vector will set the values to n (in order)
 func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, []Coord, error) {
 	var (
-		res Int64
+		res  Int64
 		crds = make([]Coord, ln)
+	)
 
 	for i := int64(0); i < ln; i++ {
 		crd := Coord{}
@@ -215,5 +216,5 @@ func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, []Coord,
 		crds = append(crds, crd)
 	}
 
-	return res, nil
+	return res, crds, nil
 }
