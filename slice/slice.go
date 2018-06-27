@@ -6,10 +6,12 @@ package slice
 import (
 	"math/big"
 	"strconv"
+
+	"github.com/nboughton/numbers/set"
 )
 
 // ToBigInt returns a big Int composite of the digits in n
-func ToBigInt(n []int64) *big.Int {
+func ToBigInt(n set.Int64) *big.Int {
 	s := []byte{}
 
 	for _, v := range n {
@@ -21,7 +23,7 @@ func ToBigInt(n []int64) *big.Int {
 }
 
 // ToInt64 takes a slice of int64s and returns their composite int64
-func ToInt64(n []int64) int64 {
+func ToInt64(n set.Int64) int64 {
 	s := []byte{}
 
 	for _, v := range n {
@@ -45,8 +47,8 @@ func ToInt(n []int) int {
 }
 
 // FromBigInt returns a big int as a slice of its digits
-func FromBigInt(n *big.Int) []int64 {
-	ints := make([]int64, len(n.String()))
+func FromBigInt(n *big.Int) set.Int64 {
+	ints := make(set.Int64, len(n.String()))
 
 	for i, char := range n.String() {
 		ints[i], _ = strconv.ParseInt(string(char), 10, 64)
@@ -56,9 +58,9 @@ func FromBigInt(n *big.Int) []int64 {
 }
 
 // FromInt64 returns a number as a slice of its digits
-func FromInt64(n int64) []int64 {
+func FromInt64(n int64) set.Int64 {
 	s := strconv.FormatInt(n, 10)
-	ints := make([]int64, len(s))
+	ints := make(set.Int64, len(s))
 
 	for i, v := range s {
 		ints[i], _ = strconv.ParseInt(string(v), 10, 64)

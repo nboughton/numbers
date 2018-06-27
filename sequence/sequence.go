@@ -8,6 +8,7 @@ import (
 	"math/big"
 
 	"github.com/nboughton/numbers/isit"
+	"github.com/nboughton/numbers/set"
 )
 
 // Primes returns a continuous channel of int64 Primes
@@ -168,8 +169,8 @@ func Fibonacci() chan *big.Int {
 }
 
 // Collatz returns the Collatz sequence starting at n
-func Collatz(n int64) []int64 {
-	seq := []int64{n}
+func Collatz(n int64) set.Int64 {
+	seq := set.Int64{n}
 
 	for {
 		n = seq[len(seq)-1]
@@ -362,8 +363,8 @@ func Rotations(n int64) chan int64 {
 // Truncate returns a channel of int64 slices that contain the
 // truncation sequence of n from the left and the right simultaneously.
 // I.e Truncate(123) = [123, 123] -> [23, 12] -> [3, 1]
-func Truncate(n int64) chan []int64 {
-	c := make(chan []int64, 1)
+func Truncate(n int64) chan set.Int64 {
+	c := make(chan set.Int64, 1)
 
 	go func() {
 		d := []byte(big.NewInt(n).String())
@@ -371,7 +372,7 @@ func Truncate(n int64) chan []int64 {
 		for i := range d {
 			l, _ := big.NewInt(0).SetString(string(d[i:]), 10)
 			r, _ := big.NewInt(0).SetString(string(d[:len(d)-i]), 10)
-			c <- []int64{l.Int64(), r.Int64()}
+			c <- set.Int64{l.Int64(), r.Int64()}
 		}
 
 		close(c)
@@ -390,9 +391,9 @@ Combinations functions found in github.com/ntns/goitertools/itertools */
 // not on their value. So if the input elements are unique, there
 // will be no repeat values in each permutation.
 //
-//  Permutations([]int64{1, 2, 3}, 3) -> [[1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]]
-func Permutations(iterable []int64, r int64) chan []int64 {
-	ch := make(chan []int64, 1)
+//  Permutations(set.Int64{1, 2, 3}, 3) -> [[1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]]
+func Permutations(iterable set.Int64, r int64) chan set.Int64 {
+	ch := make(chan set.Int64, 1)
 	if r > int64(len(iterable)) || r == 0 {
 		close(ch)
 		return ch
@@ -404,17 +405,17 @@ func Permutations(iterable []int64, r int64) chan []int64 {
 		pool := iterable
 		n := int64(len(pool))
 
-		indices := make([]int64, n)
+		indices := make(set.Int64, n)
 		for i := range indices {
 			indices[i] = int64(i)
 		}
 
-		cycles := make([]int64, r)
+		cycles := make(set.Int64, r)
 		for i := range cycles {
 			cycles[i] = n - int64(i)
 		}
 
-		result := make([]int64, r)
+		result := make(set.Int64, r)
 		for i, el := range indices[:r] {
 			result[i] = pool[el]
 		}
@@ -435,7 +436,7 @@ func Permutations(iterable []int64, r int64) chan []int64 {
 					j := cycles[i]
 					indices[i], indices[n-j] = indices[n-j], indices[i]
 
-					result := make([]int64, r)
+					result := make(set.Int64, r)
 					for k := int64(0); k < r; k++ {
 						result[k] = pool[indices[k]]
 					}
@@ -459,9 +460,9 @@ func Permutations(iterable []int64, r int64) chan []int64 {
 // Elements are treated as unique based on their position,
 // not on their value. So if the input elements are unique, there
 // will be no repeat values in each combination.
-//  Combinations([]int64{1, 2, 3, 4, 5}, 4) -> [[1 2 3 4] [1 2 3 5] [1 2 4 5] [1 3 4 5] [2 3 4 5]]
-func Combinations(iterable []int64, r int64) chan []int64 {
-	ch := make(chan []int64, 1)
+//  Combinations(set.Int64{1, 2, 3, 4, 5}, 4) -> [[1 2 3 4] [1 2 3 5] [1 2 4 5] [1 3 4 5] [2 3 4 5]]
+func Combinations(iterable set.Int64, r int64) chan set.Int64 {
+	ch := make(chan set.Int64, 1)
 	if r > int64(len(iterable)) || r == 0 {
 		close(ch)
 		return ch
@@ -473,12 +474,12 @@ func Combinations(iterable []int64, r int64) chan []int64 {
 		pool := iterable
 		n := int64(len(pool))
 
-		indices := make([]int64, r)
+		indices := make(set.Int64, r)
 		for i := range indices {
 			indices[i] = int64(i)
 		}
 
-		result := make([]int64, r)
+		result := make(set.Int64, r)
 		for i, el := range indices {
 			result[i] = pool[el]
 		}
@@ -500,7 +501,7 @@ func Combinations(iterable []int64, r int64) chan []int64 {
 				indices[j] = indices[j-1] + 1
 			}
 
-			result := make([]int64, r)
+			result := make(set.Int64, r)
 			for i = 0; i < int64(len(indices)); i++ {
 				result[i] = pool[indices[i]]
 			}

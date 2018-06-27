@@ -39,8 +39,7 @@ func Divisors(n int64) set.Int64 {
 		}
 	}
 
-	f.Dedupe()
-	return f
+	return f.Dedupe()
 }
 
 // Factorial returns n! using big Ints

@@ -65,6 +65,95 @@ func (s Int64) Dedupe() Int64 {
 	return res
 }
 
+// Combinations returns all ln length combinations of set s
+func (s Int64) Combinations(ln int) chan Int64 {
+	c := make(chan Int64)
+
+	go func() {
+		defer close(c)
+
+		pool := s
+		n := len(pool)
+
+		indices := make(Int64, ln)
+		for i := range indices {
+			indices[i] = int64(i)
+		}
+
+		result := make(Int64, ln)
+		for i, el := range indices {
+			result[i] = pool[el]
+		}
+
+		c <- result
+
+		for {
+			i := ln - 1
+			for i >= 0 && indices[i] == int64(i+n-ln) {
+				i--
+			}
+
+			if i < 0 {
+				break
+			}
+
+			indices[i]++
+			for j := i + 1; j < ln; j++ {
+				indices[j] = indices[j-1] + 1
+			}
+
+			result := make(Int64, ln)
+			for i = 0; i < len(indices); i++ {
+				result[i] = pool[indices[i]]
+			}
+
+			c <- result
+		}
+	}()
+
+	return c
+}
+
+// Permutations returns all permutations of set s
+// ln length permutations of a larger set can be achieved with
+// the following:
+//
+//    for cmb := range n.Combinations(l) {
+//        for prm := range cmb.Permutations() {
+//            ... Do stuff
+//        }
+//    }
+//
+// This is a little slower than sequence.Permutations but it does
+// not result in RAM usage spikes that can cause system crashes.
+// I consider this a reasonable trade off. It is also notable that
+// set.Permutations does not return items in lexicographical order
+// however sequence.Permutations does.
+func (s Int64) Permutations() chan Int64 {
+	c := make(chan Int64)
+
+	go func() {
+		defer close(c)
+
+		var rc func(Int64, int)
+		rc = func(a Int64, k int) {
+			if k == len(a) {
+				c <- append(Int64{}, a...) // Send a new array
+			} else {
+				for i := k; i < len(s); i++ {
+					a[k], a[i] = a[i], a[k]
+					rc(a, k+1)
+					a[k], a[i] = a[i], a[k]
+				}
+			}
+		}
+
+		rc(s, 0)
+	}()
+
+	return c
+}
+
 // Int64s is a slice of slices of int64
 type Int64s []Int64
 
@@ -107,12 +196,12 @@ func (s Int64s) MaxPathSum() int64 {
 
 /* Using Int64s as a grid
 Consider the following:
-[]int{
-	[]int{25,10,11,12,13},
-	[]int{24,09,02,03,14},
-	[]int{23,08,01,04,15},
-	[]int{22,07,06,05,16},
-	[]int{21,20,19,18,17}
+Int64{
+	Int64{25,10,11,12,13},
+	Int64{24,09,02,03,14},
+	Int64{23,08,01,04,15},
+	Int64{22,07,06,05,16},
+	Int64{21,20,19,18,17}
 }
 */
 
@@ -124,7 +213,8 @@ for i := 1; i < max; i += inc {
 	inc increases every 2nd and 4th turn
 	use vector, supply n = i..{i+inc}
 }
-
+*/
+/*
 func NewNumberSpiral(size int64) Int64s {
 	if size%2 == 0 {
 		size++
@@ -136,20 +226,55 @@ func NewNumberSpiral(size int64) Int64s {
 	}
 
 	// Starting from the center head up 1...
-	row, col, max := size/2, size/2, size*size
-	inc, turn := int64(1), int64(0)
-
-	for i := int64(1); i <= max; i++ {
-
-		// Print update after each line
-		for _, r := range grid {
-			fmt.Println(r)
+	crd, max := Coord{Row: size / 2, Col: size / 2}, size*size
+	i, inc := int64(1), int64(1)
+	for i <= max {
+		_, crds, err := grid.Vector(crd.Row, crd.Col, inc, UP, Range(i, i+inc)...)
+		if err != nil {
+			break
 		}
+		crd = crds[len(crds)-1]
+		i += inc
+
+		_, crds, err = grid.Vector(crd.Row, crd.Col, inc, LTR, Range(i, i+inc)...)
+		if err != nil {
+			break
+		}
+		crd = crds[len(crds)-1]
+		i += inc
+		inc++
+
+		_, crds, err = grid.Vector(crd.Row, crd.Col, inc, DOWN, Range(i, i+inc)...)
+		if err != nil {
+			break
+		}
+		crd = crds[len(crds)-1]
+		i += inc
+
+		_, crds, err = grid.Vector(crd.Row, crd.Col, inc, RTL, Range(i, i+inc)...)
+		if err != nil {
+			break
+		}
+		crd = crds[len(crds)-1]
+		i += inc
+		inc++
 	}
 
 	return grid
 }
 */
+
+// Range returns a set of start .. end inclusive
+func Range(start, end int64) Int64 {
+	var res Int64
+
+	for i := start; i <= end; i++ {
+		res = append(res, i)
+	}
+
+	return res
+}
+
 /*
 	switch {
 			case d == UP:
@@ -186,8 +311,8 @@ const (
 
 // Vector returns a ln length set of values starting at row/col extending in Direction d.
 // Vector also returns the coordinates of those values.
-// If supplied Vector will set the values to n (in order)
-func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, []Coord, error) {
+// If supplied Vector will set the values to replace (in order)
+func (s Int64s) Vector(r, c, ln int64, d Direction, replaceWith ...int64) (Int64, []Coord, error) {
 	var (
 		res  Int64
 		crds = make([]Coord, ln)
@@ -219,8 +344,8 @@ func (s Int64s) Vector(r, c, ln int64, d Direction, n ...int64) (Int64, []Coord,
 			return nil, nil, fmt.Errorf("Vector out of bounds [ROW|COL]:[%d|%d]", crd.Row, crd.Col)
 		}
 
-		if i < int64(len(n)) {
-			s[crd.Row][crd.Col] = n[i]
+		if i < int64(len(replaceWith)) {
+			s[crd.Row][crd.Col] = replaceWith[i]
 		}
 
 		res = append(res, s[crd.Row][crd.Col])
