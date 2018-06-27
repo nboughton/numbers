@@ -312,7 +312,7 @@ const (
 // Vector returns a ln length set of values starting at row/col extending in Direction d.
 // Vector also returns the coordinates of those values.
 // If supplied Vector will set the values to replace (in order)
-func (s Int64s) Vector(r, c, ln int64, d Direction, replaceWith ...int64) (Int64, []Coord, error) {
+func (s Int64s) Vector(pos Coord, ln int64, d Direction, replaceWith ...int64) (Int64, []Coord, error) {
 	var (
 		res  Int64
 		crds = make([]Coord, ln)
@@ -323,21 +323,21 @@ func (s Int64s) Vector(r, c, ln int64, d Direction, replaceWith ...int64) (Int64
 
 		switch d {
 		case LTR:
-			crd = Coord{r, c + i}
+			crd = Coord{pos.Row, pos.Col + i}
 		case RTL:
-			crd = Coord{r, c - i}
+			crd = Coord{pos.Row, pos.Col - i}
 		case DOWN:
-			crd = Coord{r + i, c}
+			crd = Coord{pos.Row + i, pos.Col}
 		case UP:
-			crd = Coord{r - i, c}
+			crd = Coord{pos.Row - i, pos.Col}
 		case LTRD:
-			crd = Coord{r + i, c + i}
+			crd = Coord{pos.Row + i, pos.Col + i}
 		case RTLD:
-			crd = Coord{r + i, c - i}
+			crd = Coord{pos.Row + i, pos.Col - i}
 		case LTRU:
-			crd = Coord{r - i, c + i}
+			crd = Coord{pos.Row - i, pos.Col + i}
 		case RTLU:
-			crd = Coord{r - i, c - i}
+			crd = Coord{pos.Row - i, pos.Col - i}
 		}
 
 		if crd.Row >= int64(len(s)) || crd.Row < 0 || crd.Col >= int64(len(s[crd.Row])) || crd.Col < 0 {
